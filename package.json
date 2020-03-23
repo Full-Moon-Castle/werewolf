@@ -1,0 +1,18 @@
+{
+  "name": "werewolf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VitorDaynno/werewolf.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VitorDaynno/werewolf/issues"
+  },
+  "homepage": "https://github.com/VitorDaynno/werewolf#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
