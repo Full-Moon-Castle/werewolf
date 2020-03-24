@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VitorDaynno/werewolf.git"
@@ -12,11 +15,15 @@
   },
   "homepage": "https://github.com/VitorDaynno/werewolf#readme",
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^6.8.0",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "mocha": "^7.1.1",
+    "sinon": "^9.0.1"
   },
   "dependencies": {
     "mysql": "^2.18.1",
-    "mysql-migrations": "^1.0.6"
+    "mysql-migrations": "^1.0.6",
+    "winston": "^3.2.1"
   }
 }
