@@ -14,18 +14,25 @@ class UserBO {
 
       this.verifyUser(body);
 
-      const { name, email, password } = body;
+      const { nickname, email, password } = body;
       const isUsed = await this.verifyEmail(email);
+
+      if (isUsed) {
+        const error = {
+          code: 409,
+          message: 'Entered email is already being used',
+        };
+        throw error;
+      }
 
       const encriptedPassword = this.cryptoHelper.encrypt(password);
       const now = this.dateHelper.now();
 
       const entity = {
-        name,
+        nickname,
         email,
         password: encriptedPassword,
         createdDate: now,
-        isEnabled: true,
       };
 
       const user = await this.dao.create(entity);
@@ -45,8 +52,8 @@ class UserBO {
       error = { code: 422, message: 'Email are required' };
       throw error;
     }
-    if (!entity.name) {
-      logger.error('Name not found');
+    if (!entity.nickname) {
+      logger.error('Nickname not found');
       error = { code: 422, message: 'Name are required' };
       throw error;
     }

@@ -1,0 +1,3 @@
+{
+    "insert": "insert into user(nickname, email, password, is_enabled, created_date) values (?, ?, ?, ?, ?)"
+}

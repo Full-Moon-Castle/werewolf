@@ -153,7 +153,7 @@ describe('UserBO', () => {
           .returns();
 
       verifyEmailStub
-          .withArgs('tests@mailtest.com')
+          .withArgs('test@emailtest.com')
           .returns(Promise.resolve({}));
 
       encodeTokenStub
@@ -162,18 +162,16 @@ describe('UserBO', () => {
 
       createStub
           .withArgs({
-            email: 'test@mail.com',
+            email: 'test@email.com',
             name: 'test',
             password: encryptedPassword,
-            isEnabled: true,
             createdDate: date,
           })
           .returns({
             id: 1,
-            email: 'test@mailtest.com',
+            email: 'test@emailtest.com',
             name: 'test',
             password: encryptedPassword,
-            isEnabled: true,
             createdDate: date,
           });
 
@@ -188,6 +186,37 @@ describe('UserBO', () => {
       expect(createStub.callCount).to.be.equals(1);
       expect(encodeTokenStub.callCount).to.be.equals(1);
       expect(nowStub.callCount).to.be.equals(1);
+    });
+    it('Should return a error when email is already being used', async () => {
+      verifyUserStub
+          .withArgs({
+            email: 'test@email.com',
+            name: 'test',
+            password: '123',
+          })
+          .returns();
+
+      verifyEmailStub
+          .withArgs('test@email.com')
+          .returns(true);
+
+      try {
+        await userBO.create({
+          email: 'test@email.com',
+          name: 'test',
+          password: '123',
+        });
+        fail();
+      } catch (error) {
+        expect(error.code).to.be.eqls(409);
+        expect(error.message)
+            .to.be.equals('Entered email is already being used');
+        expect(verifyUserStub.callCount).to.be.equals(1);
+        expect(verifyEmailStub.callCount).to.be.equals(1);
+        expect(createStub.callCount).to.be.equals(0);
+        expect(encodeTokenStub.callCount).to.be.equals(0);
+        expect(nowStub.callCount).to.be.equals(0);
+      }
     });
   });
 });
