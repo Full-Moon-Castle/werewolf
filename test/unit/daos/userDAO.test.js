@@ -27,7 +27,7 @@ describe('UserDAO', () => {
 
 
   describe('create', () => {
-    it('Should return a message error when occured an error on insert',
+    it('Should return a message error when occurred an error on insert',
         async () => {
           executeStub
               .withArgs(
@@ -57,11 +57,18 @@ describe('UserDAO', () => {
                   queries.insert,
                   ['test', 'test@email.com', 'password', true, date],
               )
-              .returns({});
+              .returns({
+                insertId: 1,
+              });
 
-          const message = await userDAO.create({ nickname: 'test' });
+          const message = await userDAO.create({
+            nickname: 'test',
+            email: 'test@email.com',
+            password: 'password',
+            createdDate: date,
+          });
 
-          expect(message).to.be.equals('User inserted with success');
+          expect(message).to.be.eqls({ insertId: 1 });
           expect(executeStub.callCount).to.be.equal(1);
         });
   });

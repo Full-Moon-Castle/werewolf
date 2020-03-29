@@ -11,6 +11,7 @@ const myFormat = printf(({ level, message, timestamp }) => {
 const logger = createLogger({
   format: combine(colorize(),
       timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
+      format.splat(),
       myFormat),
   transports: [
     new Console(),

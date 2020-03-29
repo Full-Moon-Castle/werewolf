@@ -19,7 +19,7 @@ class UserBO {
 
       if (isUsed) {
         const error = {
-          code: 409,
+          statusCode: 409,
           message: 'Entered email is already being used',
         };
         throw error;
@@ -27,19 +27,20 @@ class UserBO {
 
       const encriptedPassword = this.cryptoHelper.encrypt(password);
       const now = this.dateHelper.now();
+      const nowString = this.dateHelper.toString(now, 'YYYY-MM-DD HH:mm:ss');
 
       const entity = {
         nickname,
         email,
         password: encriptedPassword,
-        createdDate: now,
+        createdDate: nowString,
       };
 
-      const user = await this.dao.create(entity);
+      const result = await this.dao.create(entity);
 
-      return user;
+      return { message: `User inserted with id ${result.insertId}` };
     } catch (error) {
-      logger.error(`An error occurred: ${error}`);
+      logger.error('An error occurred: %o', error);
       throw error;
     }
   }
@@ -49,24 +50,38 @@ class UserBO {
     let error;
     if (!entity || !entity.email) {
       logger.error('Email not found');
-      error = { code: 422, message: 'Email are required' };
+      error = { statusCode: 422, message: 'Email is required' };
       throw error;
     }
     if (!entity.nickname) {
       logger.error('Nickname not found');
-      error = { code: 422, message: 'Name are required' };
+      error = { statusCode: 422, message: 'Nickname is required' };
       throw error;
     }
     if (!entity.password) {
       logger.error('Password not found');
-      error = { code: 422, message: 'Password are required' };
+      error = { statusCode: 422, message: 'Password is required' };
       throw error;
     }
   }
 
-  verifyEmail() {}
+  async verifyEmail(email) {
+    logger.info('Verifing if email was already used');
 
-  getAll() {}
+
+    const filter = {
+      email,
+    };
+    const users = await this.getAll(filter);
+
+    return users.length > 0 ? true : false;
+  }
+
+  async getAll(filter) {
+    logger.info('Getting all users by filter');
+    const users = await this.dao.getAll(filter);
+    return users;
+  }
 }
 
 module.exports = UserBO;

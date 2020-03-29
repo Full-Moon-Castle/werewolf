@@ -30,6 +30,7 @@ describe('UserBO', () => {
   beforeEach(() => {
     verifyUserStub = sinon.stub(userBO, 'verifyUser');
     nowStub = sinon.stub(dateHelper, 'now');
+    toStringStub = sinon.stub(dateHelper, 'toString');
     createStub = sinon.stub(userDAO, 'create');
     encodeTokenStub = sinon.stub(cryptoHelper, 'encrypt');
     verifyEmailStub = sinon.stub(userBO, 'verifyEmail');
@@ -43,102 +44,108 @@ describe('UserBO', () => {
     createStub.restore();
     encodeTokenStub.restore();
     verifyEmailStub.restore();
+    toStringStub.restore();
   });
 
   describe('create', () => {
     it('Should return error when there is not a body', async () => {
       verifyUserStub.withArgs(undefined).throws({
-        code: 422,
+        statusCode: 422,
         message: 'Email is required',
       });
 
       try {
         await userBO.create();
-        fail();
+        expect(0).to.equal(1);
       } catch (error) {
-        expect(error.code).to.be.equals(422);
+        expect(error.statusCode).to.be.equals(422);
         expect(error.message).to.be.equals('Email is required');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);
         expect(verifyEmailStub.callCount).to.be.equals(0);
+        expect(toStringStub.callCount).to.be.equals(0);
       }
     });
     it('Should return error when body is empty', async () => {
       verifyUserStub.withArgs({}).throws({
-        code: 422,
+        statusCode: 422,
         message: 'Email is required',
       });
 
       try {
         await userBO.create({});
-        fail();
+        expect(0).to.equal(1);
       } catch (error) {
-        expect(error.code).to.be.equals(422);
+        expect(error.statusCode).to.be.equals(422);
         expect(error.message).to.be.equals('Email is required');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);
         expect(verifyEmailStub.callCount).to.be.equals(0);
+        expect(toStringStub.callCount).to.be.equals(0);
       }
     });
     it('Should return error when body not contains email', async () => {
       verifyUserStub
           .withArgs({ password: 'test' })
           .throws({
-            code: 422,
+            statusCode: 422,
             message: 'Email is required',
           });
 
       try {
         await userBO.create({ password: 'test' });
-        fail();
+        expect(0).to.equal(1);
       } catch (error) {
-        expect(error.code).to.be.equals(422);
+        expect(error.statusCode).to.be.equals(422);
         expect(error.message).to.be.equals('Email is required');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);
         expect(verifyEmailStub.callCount).to.be.equals(0);
+        expect(toStringStub.callCount).to.be.equals(0);
       }
     });
     it('Should return error when body not contains name', async () => {
       verifyUserStub
           .withArgs({ email: 'test@email.com', password: 'test' })
-          .throws({ code: 422, message: 'Name is required' });
+          .throws({ statusCode: 422, message: 'Name is required' });
 
       try {
         await userBO.create({ email: 'test@email.com', password: 'test' });
-        fail();
+        expect(0).to.equal(1);
       } catch (error) {
-        expect(error.code).to.be.equals(422);
+        expect(error.statusCode).to.be.equals(422);
         expect(error.message).to.be.equals('Name is required');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);
         expect(verifyEmailStub.callCount).to.be.equals(0);
+        expect(toStringStub.callCount).to.be.equals(0);
       }
     });
     it('Should return error when body not contains password', async () => {
       verifyUserStub
           .withArgs({ email: 'test@email.com', name: 'test' })
-          .throws({ code: 422, message: 'Password is required' });
+          .throws({ statusCode: 422, message: 'Password is required' });
 
       try {
         await userBO.create({ email: 'test@email.com', name: 'test' });
-        fail();
+        expect(0).to.equal(1);
       } catch (error) {
-        expect(error.code).to.be.equals(422);
+        expect(error.statusCode).to.be.equals(422);
         expect(error.message).to.be.equals('Password is required');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);
         expect(verifyEmailStub.callCount).to.be.equals(0);
+        expect(toStringStub.callCount).to.be.equals(0);
       }
     });
     it('Should return a user when entity is correct', async () => {
@@ -147,38 +154,38 @@ describe('UserBO', () => {
       verifyUserStub
           .withArgs({
             email: 'test@email.com',
-            name: 'test',
+            nickname: 'test',
             password: '123',
           })
           .returns();
 
       verifyEmailStub
           .withArgs('test@emailtest.com')
-          .returns(Promise.resolve({}));
+          .returns(false);
 
       encodeTokenStub
           .withArgs('test')
           .returns(encryptedPassword);
 
+      toStringStub
+          .withArgs(date, 'YYYY-MM-DD HH:mm:ss')
+          .returns('2020-03-28 23:04:14');
+
       createStub
           .withArgs({
             email: 'test@email.com',
-            name: 'test',
+            nickname: 'test',
             password: encryptedPassword,
-            createdDate: date,
+            createdDate: '2020-03-28 23:04:14',
           })
           .returns({
-            id: 1,
-            email: 'test@emailtest.com',
-            name: 'test',
-            password: encryptedPassword,
-            createdDate: date,
+            insertId: 1,
           });
 
       await userBO.create({
         email: 'test@email.com',
-        name: 'test',
-        password: '123',
+        nickname: 'test',
+        password: 'test',
       });
 
       expect(verifyUserStub.callCount).to.be.equals(1);
@@ -186,6 +193,7 @@ describe('UserBO', () => {
       expect(createStub.callCount).to.be.equals(1);
       expect(encodeTokenStub.callCount).to.be.equals(1);
       expect(nowStub.callCount).to.be.equals(1);
+      expect(toStringStub.callCount).to.be.equals(1);
     });
     it('Should return a error when email is already being used', async () => {
       verifyUserStub
@@ -206,9 +214,9 @@ describe('UserBO', () => {
           name: 'test',
           password: '123',
         });
-        fail();
+        expect(0).to.equal(1);
       } catch (error) {
-        expect(error.code).to.be.eqls(409);
+        expect(error.statusCode).to.be.eqls(409);
         expect(error.message)
             .to.be.equals('Entered email is already being used');
         expect(verifyUserStub.callCount).to.be.equals(1);
