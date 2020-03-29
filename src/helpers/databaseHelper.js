@@ -21,10 +21,6 @@ class DatabaseHelper {
     this.query = util.promisify(connection.query).bind(connection);
   }
 
-  async closeConnection() {
-    this.connection.end();
-  }
-
   async execute(query, parameters) {
     try {
       logger.info('Running query in database');

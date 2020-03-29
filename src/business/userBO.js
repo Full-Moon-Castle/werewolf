@@ -63,11 +63,11 @@ class UserBO {
       error = { statusCode: 422, message: 'Password is required' };
       throw error;
     }
+    return true;
   }
 
   async verifyEmail(email) {
     logger.info('Verifing if email was already used');
-
 
     const filter = {
       email,

@@ -21,14 +21,6 @@ class UserDAO {
       return result;
     } catch (error) {
       logger.error(`An error occurred in DAO: ${error}`);
-      if (error.code == 'ECONNREFUSED') {
-        const handledError = {
-          message: 'An error occurred when try connect in database',
-          statusCode: 500,
-          error,
-        };
-        throw handledError;
-      }
       throw error;
     }
   }
