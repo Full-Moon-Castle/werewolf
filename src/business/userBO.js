@@ -1,5 +1,5 @@
 const logger = require('../config/logger');
-
+const statusCode = require('../helpers/statusHelper');
 
 class UserBO {
   constructor(dependencies) {
@@ -19,7 +19,7 @@ class UserBO {
 
       if (isUsed) {
         const error = {
-          statusCode: 409,
+          statusCode: statusCode.CONFLICT,
           message: 'Entered email is already being used',
         };
         throw error;
@@ -50,17 +50,26 @@ class UserBO {
     let error;
     if (!entity || !entity.email) {
       logger.error('Email not found');
-      error = { statusCode: 422, message: 'Email is required' };
+      error = {
+        statusCode: statusCode.UNPROCESSABLE_ENTITY,
+        message: 'Email is required',
+      };
       throw error;
     }
     if (!entity.nickname) {
       logger.error('Nickname not found');
-      error = { statusCode: 422, message: 'Nickname is required' };
+      error = {
+        statusCode: statusCode.UNPROCESSABLE_ENTITY,
+        message: 'Nickname is required',
+      };
       throw error;
     }
     if (!entity.password) {
       logger.error('Password not found');
-      error = { statusCode: 422, message: 'Password is required' };
+      error = {
+        statusCode: statusCode.UNPROCESSABLE_ENTITY,
+        message: 'Password is required',
+      };
       throw error;
     }
     return true;

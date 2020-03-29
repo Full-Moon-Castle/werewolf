@@ -1,5 +1,6 @@
 const logger = require('../../config/logger');
 const BOFactory = require('../../factories/factoryBO');
+const statusCode = require('../../helpers/statusHelper');
 
 class UserController {
   async create(req, res) {
@@ -9,10 +10,12 @@ class UserController {
       const business = factoryBO.getBO('USER');
       const body = req.body ? req.body: {};
       const response = await business.create(body);
-      res.status(201).json(response);
+      res.status(statusCode.CREATED).json(response);
     } catch (error) {
       logger.error('An error occurred when try create a user: %o', error);
-      const statusCode = error.statusCode ? error.statusCode : 500;
+      const statusCode = error.statusCode ?
+        error.statusCode :
+        statusCode.INTERNAL_SERVER_ERROR;
       res.status(statusCode).json(error.message);
     }
   }

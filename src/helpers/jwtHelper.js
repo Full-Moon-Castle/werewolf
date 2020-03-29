@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const settings = require('../config/settings');
 const logger = require('../config/logger');
+const statusCode = require('../helpers/statusHelper');
 
 
 class JWTHelper {
@@ -15,7 +16,7 @@ class JWTHelper {
         logger.error('[jwtHelper] The token does not exist or is empty');
         const error = {
           message: 'The token does not exist or is empty',
-          statusCode: 403,
+          statusCode: statusCode.FORBIDDEN,
         };
         throw error;
       } else {
@@ -23,7 +24,7 @@ class JWTHelper {
         if (!authorization.length === 2) {
           const error = {
             message: 'The token is badly formatted',
-            statusCode: 403,
+            statusCode: statusCode.FORBIDDEN,
           };
           throw error;
         }
@@ -38,11 +39,11 @@ class JWTHelper {
       });
     } catch (error) {
       logger.error(`An error occurred: error`);
-      if (error.code || error.code === 403) {
-        res.status(403).json({});
+      if (error.code || error.code === statusCode.FORBIDDEN) {
+        res.status(statusCode.FORBIDDEN).json({});
       }
       if (error.message || error.message === 'invalid token') {
-        res.status(403).json({});
+        res.status(statusCode.FORBIDDEN).json({});
       };
     }
   }
