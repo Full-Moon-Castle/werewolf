@@ -3,9 +3,14 @@ const jwt = require('jsonwebtoken');
 const settings = require('../config/settings');
 const logger = require('../config/logger');
 const statusCode = require('../helpers/statusHelper');
+const Settings = require('../config/settings');
 
 
 class JWTHelper {
+  constructor() {
+    this.settings = new Settings();
+  }
+
   verifyToken(req, res, next) {
     try {
       let { authorization } = req.headers;
@@ -45,6 +50,21 @@ class JWTHelper {
       if (error.message || error.message === 'invalid token') {
         res.status(statusCode.FORBIDDEN).json({});
       };
+    }
+  }
+
+  createToken(entity) {
+    try {
+      const { jwtSecret, expiresIn } = this.settings.jwt;
+      const token = jwt.sign( entity, jwtSecret, { expiresIn });
+
+      return token;
+    } catch (errors) {
+      const error = {
+        statusCode: statusCode.INTERNAL_SERVER_ERROR,
+        message: 'Internal server error',
+      };
+      return error;
     }
   }
 }

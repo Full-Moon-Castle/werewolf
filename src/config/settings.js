@@ -19,6 +19,13 @@ class Settings {
     };
 
     this.servicePort = this.getEnviroment('PORT');
+
+    this.jwt ={
+      jwtSecret: this.getEnviroment('SECRET'),
+      expiresIn: this.getEnviroment('EXPIRESIN'),
+    };
+
+    this.jwtSecret = this.getEnviroment('SECRET');
   }
 
   getEnviroment(name) {

@@ -34,7 +34,7 @@ describe('UserDAO', () => {
     });
     it('Should return an users with email\'s email', async () => {
       executeStub
-          .withArgs(`${queries.select}and email = ?`, ['test@email.com'])
+          .withArgs(`${queries.select} and email = ?`, ['test@email.com'])
           .returns([{}]);
 
       const users = await userDAO.getAll({ email: 'test@email.com' });
