@@ -136,7 +136,7 @@ describe('LoginBO', () => {
           avatar: null,
           email: 'test@email.com',
           is_enabled: 1,
-          created_date: '2020-03-31T02:14:43.000Z'
+          created_date: '2020-03-31T02:14:43.000Z',
         }]);
       jwtHelperStub.withArgs(
           { id: 1,
