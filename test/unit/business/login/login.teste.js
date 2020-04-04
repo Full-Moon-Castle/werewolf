@@ -73,12 +73,12 @@ describe('LoginBO', () => {
       try {
         verifyLoginStub
             .withArgs({ email: 'teste@test.com', password: '' })
-            .throws({ statusCode: 422, message: 'Passord is required' });
+            .throws({ statusCode: 422, message: 'Password is required' });
         await loginBO.login( { email: 'teste@test.com', password: '' } );
         expect(0).to.equal(1);
       } catch (error) {
         expect(error.statusCode).to.be.equals(422);
-        expect(error.message).to.be.equals('Passord is required');
+        expect(error.message).to.be.equals('Password is required');
         expect(verifyLoginStub.callCount).to.be.equal(1);
         expect(getAllStub.callCount).to.be.equal(0);
         expect(encryptStub.callCount).to.be.equal(0);
@@ -88,7 +88,8 @@ describe('LoginBO', () => {
 
     it('Should return error when there is not user registered', async () => {
       try {
-        verifyLoginStub.withArgs({ email: 'teste@test.com', password: '123' })
+        verifyLoginStub
+            .withArgs({ email: 'teste@test.com', password: '123' })
             .returns(true);
         encryptStub.withArgs('123').returns('126r26562');
         getAllStub.withArgs({ email: 'teste@test.com',

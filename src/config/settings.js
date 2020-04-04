@@ -22,7 +22,7 @@ class Settings {
 
     this.jwt ={
       jwtSecret: this.getEnviroment('SECRET'),
-      expiresIn: this.getEnviroment('EXPIRESIN'),
+      expiresIn: this.getEnviroment('EXPIRES_IN'),
     };
 
     this.jwtSecret = this.getEnviroment('SECRET');
