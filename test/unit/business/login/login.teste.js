@@ -54,7 +54,8 @@ describe('LoginBO', () => {
 
     it('Should return error when there is not a email', async () => {
       try {
-        verifyLoginStub.withArgs({ email: '', password: '1234' })
+        verifyLoginStub
+            .withArgs({ email: '', password: '1234' })
             .throws({ statusCode: 422, message: 'Email is required' });
         await loginBO.login( { email: '', password: '1234' } );
         expect(0).to.equal(1);
@@ -70,7 +71,8 @@ describe('LoginBO', () => {
 
     it('Should return error when there is not a password', async () => {
       try {
-        verifyLoginStub.withArgs({ email: 'teste@test.com', password: '' })
+        verifyLoginStub
+            .withArgs({ email: 'teste@test.com', password: '' })
             .throws({ statusCode: 422, message: 'Passord is required' });
         await loginBO.login( { email: 'teste@test.com', password: '' } );
         expect(0).to.equal(1);
@@ -106,13 +108,15 @@ describe('LoginBO', () => {
 
     it('Should return error when there is not create token', async () => {
       try {
-        verifyLoginStub.withArgs({ email: 'teste@test.com', password: '123' })
+        verifyLoginStub
+            .withArgs({ email: 'teste@test.com', password: '123' })
             .returns(true);
         encryptStub.withArgs('123').returns('126r26562');
-        getAllStub.withArgs({ email: 'teste@test.com',
-          password: '126r26562' }).returns([{}]);
-        jwtHelperStub.withArgs({}).throws({ statusCode: 500,
-          message: 'Internal server error' });
+        getAllStub
+            .withArgs({ email: 'teste@test.com', password: '126r26562' })
+            .returns([{}]);
+        jwtHelperStub.withArgs({})
+            .throws({ statusCode: 500, message: 'Internal server error' });
 
         await loginBO.login({ email: 'teste@test.com', password: '123' });
         expect(0).to.equal(1);
@@ -127,36 +131,40 @@ describe('LoginBO', () => {
     });
 
     it('Should return a user with token when login was success', async () => {
-      verifyLoginStub.withArgs({ email: 'teste@test.com', password: '1234' })
+      verifyLoginStub
+          .withArgs({ email: 'teste@test.com', password: '1234' })
           .returns(true);
       encryptStub.withArgs('1234').returns('126r26562');
       getAllStub.withArgs({ email: 'teste@test.com',
-        password: '126r26562' }).returns([
-        { id: 1,
-          avatar: null,
-          email: 'test@email.com',
-          is_enabled: 1,
-          created_date: '2020-03-31T02:14:43.000Z',
-        }]);
-      jwtHelperStub.withArgs(
-          { id: 1,
-            avatar: null,
-            email: 'test@email.com',
-            is_enabled: 1,
-            created_date: '2020-03-31T02:14:43.000Z',
-          }).returns('1187287287282');
+        password: '126r26562' })
+          .returns(
+              [{ id: 1,
+                avatar: null,
+                email: 'test@email.com',
+                is_enabled: 1,
+                created_date: '2020-03-31T02:14:43.000Z',
+              }]);
+      jwtHelperStub
+          .withArgs(
+              { id: 1,
+                avatar: null,
+                email: 'test@email.com',
+                is_enabled: 1,
+                created_date: '2020-03-31T02:14:43.000Z',
+              }).returns('1187287287282');
 
-      const user =await loginBO.login({ email: 'teste@test.com',
+      const user = await loginBO.login({ email: 'teste@test.com',
         password: '1234' });
-      expect(user).eqls(
-          {
-            id: 1,
-            avatar: null,
-            email: 'test@email.com',
-            is_enabled: 1,
-            created_date: '2020-03-31T02:14:43.000Z',
-            token: '1187287287282',
-          });
+      expect(user)
+          .eqls(
+              {
+                id: 1,
+                avatar: null,
+                email: 'test@email.com',
+                is_enabled: 1,
+                created_date: '2020-03-31T02:14:43.000Z',
+                token: '1187287287282',
+              });
       expect(verifyLoginStub.callCount).to.be.equal(1);
       expect(getAllStub.callCount).to.be.equal(1);
       expect(encryptStub.callCount).to.be.equal(1);

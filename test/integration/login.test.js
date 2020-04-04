@@ -38,7 +38,7 @@ describe('login', () => {
         .post('/v1/login')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .send({ 'email': 'teste@test.com.br', 'passwaord': '' })
+        .send({ 'email': 'teste@test.com.br', 'password': '' })
         .expect(422)
         .then((response) => {
           expect(response.body).contains('Password is required');

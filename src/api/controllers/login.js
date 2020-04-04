@@ -7,9 +7,7 @@ class LoginController {
     try {
       logger.info('Started login a user');
       const factoryBO = new BOFactory();
-      logger.info(factoryBO);
       const business = factoryBO.getBO('LOGIN');
-      logger.info(business);
       const body = req.body ? req.body: {};
       const response = await business.login(body);
       res.status(statusCode.OK).json(response);
