@@ -28,14 +28,19 @@ class UserDAO {
   async getAll(filters) {
     logger.info('Starting create user in DAO');
 
-    const { email } = filters;
+    const { email, password } = filters;
 
     let query = this.queries.select;
     const params = [];
 
     if (email) {
-      query += 'and email = ?';
+      query += ' and email = ?';
       params.push(email);
+    }
+
+    if (password) {
+      query += ' and password = ?';
+      params.push(password);
     }
 
     const result = await this.dbHelper.execute(query, params);

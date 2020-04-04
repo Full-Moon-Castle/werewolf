@@ -3,10 +3,11 @@ const load = require('express-load');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 
-const appSettings = require('./settings');
+const Settings = require('./settings');
 
 class ExpressConfig {
   constructor() {
+    const appSettings = new Settings();
     const app = express();
 
     app.set('port', appSettings.servicePort);

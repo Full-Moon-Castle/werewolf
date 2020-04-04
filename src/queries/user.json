@@ -1,4 +1,4 @@
 {
     "insert": "insert into user(nickname, email, password, is_enabled, created_date) values (?, ?, ?, ?, ?)",
-    "select": "select * from user where 1=1 "
+    "select": "select id, avatar, email, is_enabled, created_date from user where 1=1"
 }
