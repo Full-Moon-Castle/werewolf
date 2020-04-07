@@ -29,7 +29,34 @@ describe('users', () => {
             .expect(422);
       });
 
-      it('Should return error because name does not exist', () => {
+      it('Should return error because email is empty', () => {
+        return request(server)
+            .post('/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({ email: ' ', nickname: 'test', password: '123' })
+            .expect(422);
+      });
+
+      it('Should return error because nickname is empty', () => {
+        return request(server)
+            .post('/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({ email: 'test@email.com', nickname: ' ', password: '123' })
+            .expect(422);
+      });
+
+      it('Should return error because password is empty', () => {
+        return request(server)
+            .post('/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({ email: 'test@email.com', nickname: 'test', password: ' ' })
+            .expect(422);
+      });
+
+      it('Should return error because nickname does not exist', () => {
         return request(server)
             .post('/v1/users')
             .set('Accept', 'application/json')

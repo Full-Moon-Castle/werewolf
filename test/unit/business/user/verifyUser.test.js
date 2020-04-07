@@ -65,6 +65,48 @@ describe('UserBO', () => {
         expect(error.message).to.be.equals('Password is required');
       }
     });
+    it('Should return error when email is empty', async () => {
+      try {
+        await userBO.verifyUser(
+            {
+              email: ' ',
+              nickname: 'test',
+              password: 'test',
+            });
+        expect(0).to.equal(1);
+      } catch (error) {
+        expect(error.statusCode).to.be.equals(422);
+        expect(error.message).to.be.equals('Email is required');
+      }
+    });
+    it('Should return error when nickname is empty', async () => {
+      try {
+        await userBO.verifyUser(
+            {
+              email: 'test@email.com',
+              nickname: ' ',
+              password: 'test',
+            });
+        expect(0).to.equal(1);
+      } catch (error) {
+        expect(error.statusCode).to.be.equals(422);
+        expect(error.message).to.be.equals('Nickname is required');
+      }
+    });
+    it('Should return error when password is empty', async () => {
+      try {
+        await userBO.verifyUser(
+            {
+              email: 'test@email.com',
+              nickname: 'test',
+              password: ' ',
+            });
+        expect(0).to.equal(1);
+      } catch (error) {
+        expect(error.statusCode).to.be.equals(422);
+        expect(error.message).to.be.equals('Password is required');
+      }
+    });
     it('Should return a user when entity is correct', async () => {
       const result = await userBO.verifyUser({
         email: 'test@email.com',

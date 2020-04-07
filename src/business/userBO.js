@@ -48,7 +48,8 @@ class UserBO {
   verifyUser(entity) {
     logger.info('Verifing entity');
     let error;
-    if (!entity || !entity.email) {
+
+    if (!entity || !entity.email || entity.email.trim().length === 0) {
       logger.error('Email not found');
       error = {
         statusCode: statusCode.UNPROCESSABLE_ENTITY,
@@ -56,7 +57,7 @@ class UserBO {
       };
       throw error;
     }
-    if (!entity.nickname) {
+    if (!entity.nickname || entity.nickname.trim().length === 0) {
       logger.error('Nickname not found');
       error = {
         statusCode: statusCode.UNPROCESSABLE_ENTITY,
@@ -64,7 +65,7 @@ class UserBO {
       };
       throw error;
     }
-    if (!entity.password) {
+    if (!entity.password || entity.password.trim().length === 0) {
       logger.error('Password not found');
       error = {
         statusCode: statusCode.UNPROCESSABLE_ENTITY,
