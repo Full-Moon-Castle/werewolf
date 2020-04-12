@@ -18,7 +18,7 @@ services:
       options:
         max-size: 500m
     ports:
-        - '3306'
+        - 3306:3306
   werewolf:
     restart: always
     image: werewolf:dev
