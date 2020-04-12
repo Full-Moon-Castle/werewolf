@@ -1,0 +1,45 @@
+version: '3'
+networks:
+    db:
+    web:
+services:
+  mysql:
+    restart: always
+    image: mysql:5.7
+    environment: 
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_DATABASE=
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime
+    networks:
+      - db
+    logging:
+      options:
+        max-size: 500m
+    ports:
+        - '3306'
+  werewolf:
+    restart: always
+    image: werewolf:dev
+    build: .
+    environment:
+      - PORT=
+      - CRYPTO_ALGORITHM=
+      - CRYPTO_SECRET=
+      - DATABASE_HOST=
+      - DATABASE_USER=
+      - DATABASE_PASSWORD=
+      - DATABASE_NAME=
+      - SECRET=
+      - EXPIRES_IN=
+    networks:
+      - db
+      - web
+    logging:
+      options:
+        max-size: 500m
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+        - 5000:5000
