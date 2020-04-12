@@ -55,12 +55,12 @@ class JWTHelper {
 
   createToken(entity) {
     try {
-      const {  id, email, created_date } = entity;
+      const { id, email, createdDate } = entity;
       const { jwtSecret, expiresIn } = this.settings.jwt;
       const token = jwt.sign( {
         id,
         email,
-        createdDate: created_date,
+        createdDate,
       }, jwtSecret, { expiresIn });
 
       return token;
