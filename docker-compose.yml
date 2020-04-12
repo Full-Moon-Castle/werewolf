@@ -24,7 +24,7 @@ services:
     image: werewolf:dev
     build: .
     environment:
-      - PORT
+      - PORT=
       - CRYPTO_ALGORITHM=
       - CRYPTO_SECRET=
       - DATABASE_HOST=
