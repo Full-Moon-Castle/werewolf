@@ -64,8 +64,7 @@ class JWTHelper {
       }, jwtSecret, { expiresIn });
 
       return token;
-    } catch (errors) {
-      console.log(errors)
+    } catch (error) {
       const error = {
         statusCode: statusCode.INTERNAL_SERVER_ERROR,
         message: 'Internal server error',
