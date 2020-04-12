@@ -55,11 +55,17 @@ class JWTHelper {
 
   createToken(entity) {
     try {
+      const { id, email, createdDate } = entity;
       const { jwtSecret, expiresIn } = this.settings.jwt;
-      const token = jwt.sign( entity, jwtSecret, { expiresIn });
+      const token = jwt.sign( {
+        id,
+        email,
+        createdDate,
+      }, jwtSecret, { expiresIn });
 
       return token;
     } catch (errors) {
+      logger.error(`An error occurred: ${errors}`);
       const error = {
         statusCode: statusCode.INTERNAL_SERVER_ERROR,
         message: 'Internal server error',
