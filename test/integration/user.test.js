@@ -99,6 +99,18 @@ describe('users', () => {
             })
             .expect(409);
       });
+      it('Should return error because nick name already exist', () => {
+        return request(server)
+            .post('/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({
+              email: 'testi@email.com',
+              nickname: 'test',
+              password: '1234',
+            })
+            .expect(409);
+      });
     });
   });
 });

@@ -28,7 +28,7 @@ class UserDAO {
   async getAll(filters) {
     logger.info('Starting create user in DAO');
 
-    const { email, password } = filters;
+    const { email, password, nickname } = filters;
 
     let query = this.queries.select;
     const params = [];
@@ -36,6 +36,11 @@ class UserDAO {
     if (email) {
       query += ' and email = ?';
       params.push(email);
+    }
+
+    if (nickname) {
+      query += ' and nickname = ?';
+      params.push(nickname);
     }
 
     if (password) {

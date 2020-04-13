@@ -26,6 +26,7 @@ describe('UserBO', () => {
   let encodeTokenStub;
   let verifyEmailStub;
   let verifyUserStub;
+  let verifyNickNameStub;
 
   beforeEach(() => {
     verifyUserStub = sinon.stub(userBO, 'verifyUser');
@@ -34,6 +35,7 @@ describe('UserBO', () => {
     createStub = sinon.stub(userDAO, 'create');
     encodeTokenStub = sinon.stub(cryptoHelper, 'encrypt');
     verifyEmailStub = sinon.stub(userBO, 'verifyEmail');
+    verifyNickNameStub = sinon.stub(userBO, 'verifyNickName');
     date = new Date();
     nowStub.returns(date);
   });
@@ -45,6 +47,7 @@ describe('UserBO', () => {
     encodeTokenStub.restore();
     verifyEmailStub.restore();
     toStringStub.restore();
+    verifyNickNameStub.restore();
   });
 
   describe('create', () => {
@@ -154,13 +157,17 @@ describe('UserBO', () => {
       verifyUserStub
           .withArgs({
             email: 'test@email.com',
-            nickname: 'test',
+            nickname: 'test1',
             password: '123',
           })
           .returns();
 
       verifyEmailStub
           .withArgs('test@emailtest.com')
+          .returns(false);
+
+      verifyNickNameStub
+          .withArgs('test1')
           .returns(false);
 
       encodeTokenStub
@@ -174,7 +181,7 @@ describe('UserBO', () => {
       createStub
           .withArgs({
             email: 'test@email.com',
-            nickname: 'test',
+            nickname: 'test1',
             password: encryptedPassword,
             createdDate: '2020-03-28 23:04:14',
           })
@@ -184,7 +191,7 @@ describe('UserBO', () => {
 
       await userBO.create({
         email: 'test@email.com',
-        nickname: 'test',
+        nickname: 'test1',
         password: 'test',
       });
 
@@ -199,7 +206,7 @@ describe('UserBO', () => {
       verifyUserStub
           .withArgs({
             email: 'test@email.com',
-            nickname: 'test',
+            nickname: 'test1',
             password: '123',
           })
           .returns();
@@ -211,7 +218,7 @@ describe('UserBO', () => {
       try {
         await userBO.create({
           email: 'test@email.com',
-          nickname: 'test',
+          nickname: 'test1',
           password: '123',
         });
         expect(0).to.equal(1);
@@ -221,6 +228,42 @@ describe('UserBO', () => {
             .to.be.equals('Entered email is already being used');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(verifyEmailStub.callCount).to.be.equals(1);
+        expect(createStub.callCount).to.be.equals(0);
+        expect(encodeTokenStub.callCount).to.be.equals(0);
+        expect(nowStub.callCount).to.be.equals(0);
+      }
+    });
+    it('Should return a error when nick name is already used', async () => {
+      verifyUserStub
+          .withArgs({
+            email: 'test@email.com',
+            nickname: 'test',
+            password: '123',
+          })
+          .returns();
+
+      verifyEmailStub
+          .withArgs('test1@email.com')
+          .returns(false);
+
+      verifyNickNameStub
+          .withArgs('test')
+          .returns(true);
+
+      try {
+        await userBO.create({
+          email: 'test1@email.com',
+          nickname: 'test',
+          password: '123',
+        });
+        expect(0).to.equal(1);
+      } catch (error) {
+        expect(error.statusCode).to.be.eqls(409);
+        expect(error.message)
+            .to.be.equals('Entered nick name is already being used');
+        expect(verifyUserStub.callCount).to.be.equals(1);
+        expect(verifyEmailStub.callCount).to.be.equals(1);
+        expect(verifyNickNameStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);

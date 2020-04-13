@@ -16,11 +16,20 @@ class UserBO {
 
       const { nickname, email, password } = body;
       const isUsed = await this.verifyEmail(email);
+      const isUsedNickName = await this.verifyNickName(nickname);
 
       if (isUsed) {
         const error = {
           statusCode: statusCode.CONFLICT,
           message: 'Entered email is already being used',
+        };
+        throw error;
+      }
+
+      if (isUsedNickName) {
+        const error = {
+          statusCode: statusCode.CONFLICT,
+          message: 'Entered nick name is already being used',
         };
         throw error;
       }
@@ -81,6 +90,17 @@ class UserBO {
 
     const filter = {
       email,
+    };
+    const users = await this.getAll(filter);
+
+    return users.length > 0 ? true : false;
+  }
+
+  async verifyNickName(nickname) {
+    logger.info('Verifing if nick name was already used');
+
+    const filter = {
+      nickname,
     };
     const users = await this.getAll(filter);
 
