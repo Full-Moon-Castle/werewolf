@@ -206,7 +206,7 @@ describe('UserBO', () => {
       verifyUserStub
           .withArgs({
             email: 'test@email.com',
-            nickname: 'test1',
+            nickname: 'test',
             password: '123',
           })
           .returns();
@@ -218,7 +218,7 @@ describe('UserBO', () => {
       try {
         await userBO.create({
           email: 'test@email.com',
-          nickname: 'test1',
+          nickname: 'test',
           password: '123',
         });
         expect(0).to.equal(1);
@@ -243,7 +243,7 @@ describe('UserBO', () => {
           .returns();
 
       verifyEmailStub
-          .withArgs('test1@email.com')
+          .withArgs('test@email.com')
           .returns(false);
 
       verifyNicknameStub
@@ -252,7 +252,7 @@ describe('UserBO', () => {
 
       try {
         await userBO.create({
-          email: 'test1@email.com',
+          email: 'test@email.com',
           nickname: 'test',
           password: '123',
         });
