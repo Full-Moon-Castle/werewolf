@@ -167,7 +167,7 @@ describe('UserBO', () => {
           .returns(false);
 
       verifyNicknameStub
-          .withArgs('test1')
+          .withArgs('test')
           .returns(false);
 
       encodeTokenStub
