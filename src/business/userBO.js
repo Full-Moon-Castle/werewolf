@@ -118,7 +118,7 @@ class UserBO {
   }
 
   async verifyNickname(nickname) {
-    logger.info('Verifing if nick name was already used');
+    logger.info('Verifing if nickname was already used');
 
     const filter = {
       nickname,
