@@ -31,7 +31,7 @@ describe('UserBO', () => {
   });
 
   describe('verifyNickname', () => {
-    it('Should return true when nick name already used', async () => {
+    it('Should return true when nickname already used', async () => {
       getAllStub
           .withArgs({ nickname: 'test' })
           .returns([{}]);
