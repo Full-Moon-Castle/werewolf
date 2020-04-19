@@ -47,7 +47,7 @@ class UserBO {
 
       const result = await this.dao.create(entity);
 
-      return { message: `0 ${result.insertId}` };
+      return { message: `User inserted with id ${result.insertId}` };
     } catch (error) {
       logger.error('An error occurred: %o', error);
       throw error;

@@ -119,27 +119,29 @@ describe('users', () => {
             .send({})
             .expect(404);
       });
-      it('Must return error because id is not a number', () => {
-        return request(server)
-            .delete('/v1/users/error')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .send({})
-            .expect(409)
-            .then((response) => {
-              expect(response.body).contains('The id is not an number');
-            });
-      });
-      it('You must return success when deleting user', () => {
-        return request(server)
-            .delete('/v1/users/4')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .send({})
-            .expect(200)
-            .then((response) => {
-              expect(response.body.message).contains('Deleted user id: 4');
-            });
+      describe('DELETE', () => {
+        it('Must return error because id is not a number', () => {
+          return request(server)
+              .delete('/v1/users/error')
+              .set('Accept', 'application/json')
+              .expect('Content-Type', /json/)
+              .send({})
+              .expect(409)
+              .then((response) => {
+                expect(response.body).contains('The id is not an number');
+              });
+        });
+        it('You must return success when deleting user', () => {
+          return request(server)
+              .delete('/v1/users/4')
+              .set('Accept', 'application/json')
+              .expect('Content-Type', /json/)
+              .send({})
+              .expect(200)
+              .then((response) => {
+                expect(response.body.message).contains('Deleted user id: 4');
+              });
+        });
       });
     });
   });
