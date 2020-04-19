@@ -39,7 +39,7 @@ describe('UserBO', () => {
       const isUsed = await userBO.verifyNickname('test');
       expect(isUsed).to.be.equal(true);
     });
-    it('Should return false when nick name is new', async () => {
+    it('Should return false when nickname is new', async () => {
       getAllStub
           .withArgs({ nickname: 'test' })
           .returns([]);
