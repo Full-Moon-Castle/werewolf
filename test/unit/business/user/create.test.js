@@ -157,7 +157,7 @@ describe('UserBO', () => {
       verifyUserStub
           .withArgs({
             email: 'test@email.com',
-            nickname: 'test1',
+            nickname: 'test',
             password: '123',
           })
           .returns();
@@ -260,7 +260,7 @@ describe('UserBO', () => {
       } catch (error) {
         expect(error.statusCode).to.be.eqls(409);
         expect(error.message)
-            .to.be.equals('Entered nick name is already being used');
+            .to.be.equals('Entered nickname is already being used');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(verifyEmailStub.callCount).to.be.equals(1);
         expect(verifyNicknameStub.callCount).to.be.equals(1);

@@ -16,7 +16,7 @@ class UserBO {
 
       const { nickname, email, password } = body;
       const isUsed = await this.verifyEmail(email);
-      const isUsedNickName = await this.verifyNickname(nickname);
+      const isUsedNickname = await this.verifyNickname(nickname);
 
       if (isUsed) {
         const error = {
@@ -26,10 +26,10 @@ class UserBO {
         throw error;
       }
 
-      if (isUsedNickName) {
+      if (isUsedNickname) {
         const error = {
           statusCode: statusCode.CONFLICT,
-          message: 'Entered nick name is already being used',
+          message: 'Entered nickname is already being used',
         };
         throw error;
       }
