@@ -16,7 +16,7 @@ class UserBO {
 
       const { nickname, email, password } = body;
       const isUsed = await this.verifyEmail(email);
-      const isUsedNickName = await this.verifyNickName(nickname);
+      const isUsedNickName = await this.verifyNickname(nickname);
 
       if (isUsed) {
         const error = {
@@ -117,7 +117,7 @@ class UserBO {
     return users.length > 0 ? true : false;
   }
 
-  async verifyNickName(nickname) {
+  async verifyNickname(nickname) {
     logger.info('Verifing if nick name was already used');
 
     const filter = {

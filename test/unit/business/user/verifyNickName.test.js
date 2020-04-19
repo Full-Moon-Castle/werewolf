@@ -30,20 +30,20 @@ describe('UserBO', () => {
     getAllStub.restore();
   });
 
-  describe('verifyNickName', () => {
+  describe('verifyNickname', () => {
     it('Should return true when nick name already used', async () => {
       getAllStub
           .withArgs({ nickname: 'test' })
           .returns([{}]);
 
-      const isUsed = await userBO.verifyNickName('test');
+      const isUsed = await userBO.verifyNickname('test');
       expect(isUsed).to.be.equal(true);
     });
     it('Should return false when nick name is new', async () => {
       getAllStub
           .withArgs({ nickname: 'test' })
           .returns([]);
-      const isUsed = await userBO.verifyNickName('test');
+      const isUsed = await userBO.verifyNickname('test');
       expect(isUsed).to.be.equal(false);
     });
   });

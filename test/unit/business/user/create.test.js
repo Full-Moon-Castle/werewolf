@@ -26,7 +26,7 @@ describe('UserBO', () => {
   let encodeTokenStub;
   let verifyEmailStub;
   let verifyUserStub;
-  let verifyNickNameStub;
+  let verifyNicknameStub;
 
   beforeEach(() => {
     verifyUserStub = sinon.stub(userBO, 'verifyUser');
@@ -35,7 +35,7 @@ describe('UserBO', () => {
     createStub = sinon.stub(userDAO, 'create');
     encodeTokenStub = sinon.stub(cryptoHelper, 'encrypt');
     verifyEmailStub = sinon.stub(userBO, 'verifyEmail');
-    verifyNickNameStub = sinon.stub(userBO, 'verifyNickName');
+    verifyNicknameStub = sinon.stub(userBO, 'verifyNickname');
     date = new Date();
     nowStub.returns(date);
   });
@@ -47,7 +47,7 @@ describe('UserBO', () => {
     encodeTokenStub.restore();
     verifyEmailStub.restore();
     toStringStub.restore();
-    verifyNickNameStub.restore();
+    verifyNicknameStub.restore();
   });
 
   describe('create', () => {
@@ -166,7 +166,7 @@ describe('UserBO', () => {
           .withArgs('test@emailtest.com')
           .returns(false);
 
-      verifyNickNameStub
+      verifyNicknameStub
           .withArgs('test1')
           .returns(false);
 
@@ -246,7 +246,7 @@ describe('UserBO', () => {
           .withArgs('test1@email.com')
           .returns(false);
 
-      verifyNickNameStub
+      verifyNicknameStub
           .withArgs('test')
           .returns(true);
 
@@ -263,7 +263,7 @@ describe('UserBO', () => {
             .to.be.equals('Entered nick name is already being used');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(verifyEmailStub.callCount).to.be.equals(1);
-        expect(verifyNickNameStub.callCount).to.be.equals(1);
+        expect(verifyNicknameStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);

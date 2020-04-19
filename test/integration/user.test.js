@@ -120,7 +120,7 @@ describe('users', () => {
             .expect(404);
       });
       describe('DELETE', () => {
-        it('Must return error because id is not a number', () => {
+        it('Should return error because id is not a number', () => {
           return request(server)
               .delete('/v1/users/error')
               .set('Accept', 'application/json')
@@ -131,7 +131,7 @@ describe('users', () => {
                 expect(response.body).contains('The id is not an number');
               });
         });
-        it('You must return success when deleting user', () => {
+        it('You Should return success when deleting user', () => {
           return request(server)
               .delete('/v1/users/4')
               .set('Accept', 'application/json')
