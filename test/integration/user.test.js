@@ -105,7 +105,7 @@ describe('users', () => {
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .send({
-              email: 'testi@email.com',
+              email: 'test@email.com',
               nickname: 'test',
               password: '1234',
             })
