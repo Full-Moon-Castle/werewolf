@@ -16,11 +16,20 @@ class UserBO {
 
       const { nickname, email, password } = body;
       const isUsed = await this.verifyEmail(email);
+      const isUsedNickname = await this.verifyNickname(nickname);
 
       if (isUsed) {
         const error = {
           statusCode: statusCode.CONFLICT,
           message: 'Entered email is already being used',
+        };
+        throw error;
+      }
+
+      if (isUsedNickname) {
+        const error = {
+          statusCode: statusCode.CONFLICT,
+          message: 'Entered nickname is already being used',
         };
         throw error;
       }
@@ -39,6 +48,27 @@ class UserBO {
       const result = await this.dao.create(entity);
 
       return { message: `User inserted with id ${result.insertId}` };
+    } catch (error) {
+      logger.error('An error occurred: %o', error);
+      throw error;
+    }
+  }
+
+  async delete(id) {
+    try {
+      logger.info('Starting delete');
+
+      if (isNaN(id)) {
+        const error = {
+          statusCode: statusCode.CONFLICT,
+          message: 'The id is not an number',
+        };
+        throw error;
+      }
+
+      await this.dao.delete(id);
+
+      return { message: `Deleted user id: ${id}` };
     } catch (error) {
       logger.error('An error occurred: %o', error);
       throw error;
@@ -81,6 +111,17 @@ class UserBO {
 
     const filter = {
       email,
+    };
+    const users = await this.getAll(filter);
+
+    return users.length > 0 ? true : false;
+  }
+
+  async verifyNickname(nickname) {
+    logger.info('Verifing if nickname was already used');
+
+    const filter = {
+      nickname,
     };
     const users = await this.getAll(filter);
 

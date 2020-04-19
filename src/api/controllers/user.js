@@ -19,6 +19,23 @@ class UserController {
       res.status(statusCode).json(error.message);
     }
   }
+
+  async delete(req, res) {
+    try {
+      logger.info('Started delete a user');
+      const factoryBO = new BOFactory();
+      const business = factoryBO.getBO('USER');
+      const id = req.params.id ? req.params.id: null;
+      const response = await business.delete(id);
+      res.status(statusCode.OK).json(response);
+    } catch (error) {
+      logger.error('An error occurred when try create a user: %o', error);
+      const statusCode = error.statusCode ?
+        error.statusCode :
+        statusCode.INTERNAL_SERVER_ERROR;
+      res.status(statusCode).json(error.message);
+    }
+  }
 }
 
 module.exports = new UserController;

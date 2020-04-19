@@ -26,6 +26,7 @@ describe('UserBO', () => {
   let encodeTokenStub;
   let verifyEmailStub;
   let verifyUserStub;
+  let verifyNicknameStub;
 
   beforeEach(() => {
     verifyUserStub = sinon.stub(userBO, 'verifyUser');
@@ -34,6 +35,7 @@ describe('UserBO', () => {
     createStub = sinon.stub(userDAO, 'create');
     encodeTokenStub = sinon.stub(cryptoHelper, 'encrypt');
     verifyEmailStub = sinon.stub(userBO, 'verifyEmail');
+    verifyNicknameStub = sinon.stub(userBO, 'verifyNickname');
     date = new Date();
     nowStub.returns(date);
   });
@@ -45,6 +47,7 @@ describe('UserBO', () => {
     encodeTokenStub.restore();
     verifyEmailStub.restore();
     toStringStub.restore();
+    verifyNicknameStub.restore();
   });
 
   describe('create', () => {
@@ -163,6 +166,10 @@ describe('UserBO', () => {
           .withArgs('test@emailtest.com')
           .returns(false);
 
+      verifyNicknameStub
+          .withArgs('test')
+          .returns(false);
+
       encodeTokenStub
           .withArgs('test')
           .returns(encryptedPassword);
@@ -221,6 +228,42 @@ describe('UserBO', () => {
             .to.be.equals('Entered email is already being used');
         expect(verifyUserStub.callCount).to.be.equals(1);
         expect(verifyEmailStub.callCount).to.be.equals(1);
+        expect(createStub.callCount).to.be.equals(0);
+        expect(encodeTokenStub.callCount).to.be.equals(0);
+        expect(nowStub.callCount).to.be.equals(0);
+      }
+    });
+    it('Should return a error when nick name is already used', async () => {
+      verifyUserStub
+          .withArgs({
+            email: 'test@email.com',
+            nickname: 'test',
+            password: '123',
+          })
+          .returns();
+
+      verifyEmailStub
+          .withArgs('test@email.com')
+          .returns(false);
+
+      verifyNicknameStub
+          .withArgs('test')
+          .returns(true);
+
+      try {
+        await userBO.create({
+          email: 'test@email.com',
+          nickname: 'test',
+          password: '123',
+        });
+        expect(0).to.equal(1);
+      } catch (error) {
+        expect(error.statusCode).to.be.eqls(409);
+        expect(error.message)
+            .to.be.equals('Entered nickname is already being used');
+        expect(verifyUserStub.callCount).to.be.equals(1);
+        expect(verifyEmailStub.callCount).to.be.equals(1);
+        expect(verifyNicknameStub.callCount).to.be.equals(1);
         expect(createStub.callCount).to.be.equals(0);
         expect(encodeTokenStub.callCount).to.be.equals(0);
         expect(nowStub.callCount).to.be.equals(0);

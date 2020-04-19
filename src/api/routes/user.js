@@ -4,4 +4,6 @@ module.exports = (app) => {
 
   app.route('/v1/users')
       .post(controller.create);
+  app.route('/v1/users/:id')
+      .delete(controller.delete);
 };

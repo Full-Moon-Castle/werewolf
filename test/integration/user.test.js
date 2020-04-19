@@ -99,6 +99,50 @@ describe('users', () => {
             })
             .expect(409);
       });
+      it('Should return error because nick name already exist', () => {
+        return request(server)
+            .post('/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({
+              email: 'test@email.com',
+              nickname: 'test',
+              password: '1234',
+            })
+            .expect(409);
+      });
+    });
+  });
+  describe('DELETE', () => {
+    it('Will return error because id was not informed', () => {
+      return request(server)
+          .delete('/v1/users/')
+          .set('Accept', 'application/json')
+          .expect('Content-Type', 'text/html; charset=utf-8')
+          .send({})
+          .expect(404);
+    });
+    it('Should return error because id is not a number', () => {
+      return request(server)
+          .delete('/v1/users/error')
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .send({})
+          .expect(409)
+          .then((response) => {
+            expect(response.body).contains('The id is not an number');
+          });
+    });
+    it('You Should return success when deleting user', () => {
+      return request(server)
+          .delete('/v1/users/4')
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .send({})
+          .expect(200)
+          .then((response) => {
+            expect(response.body.message).contains('Deleted user id: 4');
+          });
     });
   });
 });
