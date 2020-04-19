@@ -181,7 +181,7 @@ describe('UserBO', () => {
       createStub
           .withArgs({
             email: 'test@email.com',
-            nickname: 'test1',
+            nickname: 'test',
             password: encryptedPassword,
             createdDate: '2020-03-28 23:04:14',
           })
@@ -191,7 +191,7 @@ describe('UserBO', () => {
 
       await userBO.create({
         email: 'test@email.com',
-        nickname: 'test1',
+        nickname: 'test',
         password: 'test',
       });
 
