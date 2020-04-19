@@ -52,6 +52,23 @@ class UserDAO {
 
     return result;
   }
+
+  async delete(id) {
+    try {
+      logger.info('Starting delete user in DAO');
+
+      const query = this.queries.delete;
+
+      const params = [id];
+
+      const result = await this.dbHelper.execute(query, params);
+
+      return result;
+    } catch (error) {
+      logger.error(`An error occurred in DAO: ${error}`);
+      throw error;
+    }
+  }
 }
 
 module.exports = UserDAO;

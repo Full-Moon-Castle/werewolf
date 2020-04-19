@@ -47,7 +47,28 @@ class UserBO {
 
       const result = await this.dao.create(entity);
 
-      return { message: `User inserted with id ${result.insertId}` };
+      return { message: `0 ${result.insertId}` };
+    } catch (error) {
+      logger.error('An error occurred: %o', error);
+      throw error;
+    }
+  }
+
+  async delete(id) {
+    try {
+      logger.info('Starting delete');
+
+      if (isNaN(id)) {
+        const error = {
+          statusCode: statusCode.CONFLICT,
+          message: 'The id is not an number',
+        };
+        throw error;
+      }
+
+      await this.dao.delete(id);
+
+      return { message: `Deleted user id: ${id}` };
     } catch (error) {
       logger.error('An error occurred: %o', error);
       throw error;
