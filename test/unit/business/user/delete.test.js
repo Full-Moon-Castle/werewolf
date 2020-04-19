@@ -51,6 +51,7 @@ describe('UserBO', () => {
         message: 'Deleted user id: 6',
       });
       await userBO.delete(6);
+      expect(deleteStub.callCount).to.be.equals(1);
     });
   });
 });
