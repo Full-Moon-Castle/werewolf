@@ -54,9 +54,17 @@ class UserBO {
     }
   }
 
-  async delete(id) {
+  async delete(id, userId) {
     try {
       logger.info('Starting delete');
+
+      if (userId != id) {
+        const error = {
+          statusCode: statusCode.FORBIDDEN,
+          message: 'You are not allowed to delete this user.',
+        };
+        throw error;
+      }
 
       if (isNaN(id)) {
         const error = {

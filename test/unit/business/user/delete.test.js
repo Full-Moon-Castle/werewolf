@@ -38,7 +38,21 @@ describe('UserBO', () => {
       });
 
       try {
-        await userBO.delete('string');
+        await userBO.delete('string', 'string');
+        expect(0).to.equal(1);
+      } catch (error) {
+        expect(error.statusCode).to.be.equals(409);
+        expect(error.message).to.be.equals('The id is not an number');
+      }
+    });
+    it('Should return error because id is not equal userId', async () => {
+      deleteStub.withArgs(1, 2).throws({
+        statusCode: 403,
+        message: 'You are not allowed to delete this user.',
+      });
+
+      try {
+        await userBO.delete('string', 'string');
         expect(0).to.equal(1);
       } catch (error) {
         expect(error.statusCode).to.be.equals(409);
@@ -50,7 +64,7 @@ describe('UserBO', () => {
         statusCode: 200,
         message: 'Deleted user id: 6',
       });
-      await userBO.delete(6);
+      await userBO.delete(6, 6);
       expect(deleteStub.callCount).to.be.equals(1);
     });
   });

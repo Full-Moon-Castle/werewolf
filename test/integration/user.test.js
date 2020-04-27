@@ -5,6 +5,8 @@ const expect = chai.expect;
 const server = require('../../src/server');
 
 describe('users', () => {
+  let validToken;
+  let userId;
   after(() => {
     server.close();
   });
@@ -114,34 +116,40 @@ describe('users', () => {
     });
   });
   describe('DELETE', () => {
-    it('Will return error because id was not informed', () => {
+    it('Should return user with valid entity', () => {
       return request(server)
-          .delete('/v1/users/')
-          .set('Accept', 'application/json')
-          .expect('Content-Type', 'text/html; charset=utf-8')
-          .send({})
-          .expect(404);
-    });
-    it('Should return error because id is not a number', () => {
-      return request(server)
-          .delete('/v1/users/error')
+          .post('/v1/users')
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .send({})
-          .expect(409)
+          .send({
+            email: 'delete@delete.com',
+            nickname: 'delete',
+            password: '1234',
+          });
+    });
+    it('Logging in to get token', () => {
+      return request(server)
+          .post('/v1/login')
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .send({ 'email': 'delete@delete.com', 'password': '1234' })
           .then((response) => {
-            expect(response.body).contains('The id is not an number');
+            const { token, id } = response.body;
+            validToken = token;
+            userId = id;
           });
     });
     it('You Should return success when deleting user', () => {
       return request(server)
-          .delete('/v1/users/4')
+          .delete(`/v1/users/${userId}`)
           .set('Accept', 'application/json')
+          .set('Authorization', `Bearer ${validToken}`)
           .expect('Content-Type', /json/)
           .send({})
           .expect(200)
           .then((response) => {
-            expect(response.body.message).contains('Deleted user id: 4');
+            const { message } = response.body;
+            expect(message).contains(`Deleted user id: ${userId}`);
           });
     });
   });
