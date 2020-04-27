@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-const settings = require('../config/settings');
 const logger = require('../config/logger');
 const statusCode = require('../helpers/statusHelper');
 const Settings = require('../config/settings');
@@ -13,9 +12,10 @@ class JWTHelper {
 
   verifyToken(req, res, next) {
     try {
+      const settings = new Settings();
       let { authorization } = req.headers;
 
-      logger.info(`Validating authentication by token: ${token}`);
+      logger.info(`Validating authentication by token: ${authorization}`);
 
       if (!authorization || authorization === '') {
         logger.error('[jwtHelper] The token does not exist or is empty');
@@ -34,21 +34,16 @@ class JWTHelper {
           throw error;
         }
       }
-
-      jwt.verify(token, settings.jwt.secret, (error, decoded) => {
-        if (error) {
-          throw error;
-        }
-        logger.info(`The token is valid with payload token: ${decoded}`);
-        next();
-      });
+      const decoded = jwt.verify(authorization[1], settings.jwt.jwtSecret);
+      res.decoded = decoded;
+      next();
     } catch (error) {
-      logger.error(`An error occurred: error`);
+      logger.error(`An error occurred: ${error}`);
       if (error.code || error.code === statusCode.FORBIDDEN) {
-        res.status(statusCode.FORBIDDEN).json({});
+        res.status(statusCode.FORBIDDEN).json(error);
       }
       if (error.message || error.message === 'invalid token') {
-        res.status(statusCode.FORBIDDEN).json({});
+        res.status(statusCode.FORBIDDEN).json(error);
       };
     }
   }
