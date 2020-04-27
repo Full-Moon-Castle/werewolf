@@ -20,7 +20,7 @@ class UserController {
     }
   }
 
-  async delete(req, res, next) {
+  async delete(req, res) {
     try {
       logger.info('Started delete a user');
       const factoryBO = new BOFactory();
