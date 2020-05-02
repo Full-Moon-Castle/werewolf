@@ -53,6 +53,10 @@ class UserDAO {
     return result;
   }
 
+  async update(id, entity) {
+    
+  }
+
   async delete(id) {
     try {
       logger.info('Starting delete user in DAO');

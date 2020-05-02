@@ -54,6 +54,37 @@ class UserBO {
     }
   }
 
+  async update(id, userId, user) {
+    try {
+      logger.info('Starting update user');
+
+      if (userId != id) {
+        const error = {
+          statusCode: statusCode.FORBIDDEN,
+          message: 'You are not allowed to update this user.',
+        };
+        throw error;
+      }
+
+      if (isNaN(id)) {
+        const error = {
+          statusCode: statusCode.CONFLICT,
+          message: 'The id is not an number',
+        };
+        throw error;
+      }
+
+      const { avatar } = user;
+
+      await this.dao.update(id, { avatar });
+
+      return { message: `Updated user id: ${id}` };
+    } catch (error) {
+      logger.error('An error occurred: %o', error);
+      throw error;
+    }
+  }
+
   async delete(id, userId) {
     try {
       logger.info('Starting delete');
