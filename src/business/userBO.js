@@ -54,6 +54,12 @@ class UserBO {
     }
   }
 
+  async getAll(filter) {
+    logger.info('Getting all users by filter');
+    const users = await this.dao.getAll(filter);
+    return users;
+  }
+
   async update(id, userId, user) {
     try {
       logger.info('Starting update user');
@@ -76,7 +82,9 @@ class UserBO {
 
       const { avatar } = user;
 
-      await this.dao.update(id, { avatar });
+      this.verifyAvatar(avatar);
+
+      await this.dao.update(id, avatar);
 
       return { message: `Updated user id: ${id}` };
     } catch (error) {
@@ -167,10 +175,29 @@ class UserBO {
     return users.length > 0 ? true : false;
   }
 
-  async getAll(filter) {
-    logger.info('Getting all users by filter');
-    const users = await this.dao.getAll(filter);
-    return users;
+  verifyAvatar(avatar) {
+    logger.info('Verifing avatar');
+    let error;
+
+    if (!avatar || avatar === '') {
+      logger.error('Avatar not found');
+      error = {
+        statusCode: statusCode.UNPROCESSABLE_ENTITY,
+        message: 'Avatar cannot be empty or null',
+      };
+      throw error;
+    }
+
+    if (typeof avatar != 'string') {
+      logger.error('Avatar must be a String');
+      error = {
+        statusCode: statusCode.UNPROCESSABLE_ENTITY,
+        message: 'Avatar must be a String',
+      };
+      throw error;
+    }
+
+    return true;
   }
 }
 

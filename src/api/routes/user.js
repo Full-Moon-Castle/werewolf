@@ -9,5 +9,6 @@ module.exports = (app) => {
   app.route('/v1/users')
       .post(controller.create);
   app.route('/v1/users/:id')
-      .delete(jwtHelper.verifyToken, controller.delete);
+      .delete(jwtHelper.verifyToken, controller.delete)
+      .put(jwtHelper.verifyToken, controller.update);
 };

@@ -21,13 +21,16 @@ describe('UserBO', () => {
   });
 
   let updateStub;
+  let verifyAvatarStub;
 
   beforeEach(() => {
     updateStub = sinon.stub(userDAO, 'update');
+    verifyAvatarStub = sinon.stub(userBO, 'verifyAvatar');
   });
 
   afterEach(() => {
     updateStub.restore();
+    verifyAvatarStub.restore();
   });
 
   describe('update', () => {
@@ -38,6 +41,8 @@ describe('UserBO', () => {
       } catch (error) {
         expect(error.statusCode).to.be.equals(409);
         expect(error.message).to.be.equals('The id is not an number');
+        expect(updateStub.callCount).to.be.equals(0);
+        expect(verifyAvatarStub.callCount).to.be.equals(0);
       }
     });
     it('Should return error because id is not equal userId', async () => {
@@ -49,6 +54,8 @@ describe('UserBO', () => {
         expect(statusCode).to.be.equals(403);
         expect(message)
             .to.be.equals('You are not allowed to update this user.');
+        expect(updateStub.callCount).to.be.equals(0);
+        expect(verifyAvatarStub.callCount).to.be.equals(0);
       }
     });
     it('Should return success when update user', async () => {
@@ -59,9 +66,14 @@ describe('UserBO', () => {
             message: 'updated user id: 6',
           });
 
+      verifyAvatarStub
+          .withArgs('avatar')
+          .returns(true);
+
       const result = await userBO.update(6, 6, { avatar: 'avatar' });
       expect(result.message).to.be.equals('Updated user id: 6');
       expect(updateStub.callCount).to.be.equals(1);
+      expect(verifyAvatarStub.callCount).to.be.equals(1);
     });
   });
 });

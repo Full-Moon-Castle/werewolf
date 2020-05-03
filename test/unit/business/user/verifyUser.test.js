@@ -31,7 +31,7 @@ describe('UserBO', () => {
     });
     it('Should return error when body is empty', async () => {
       try {
-        await userBO.create({});
+        await userBO.verifyUser({});
         expect(0).to.equal(1);
       } catch (error) {
         expect(error.statusCode).to.be.equals(422);
@@ -40,7 +40,7 @@ describe('UserBO', () => {
     });
     it('Should return error when body not contains email', async () => {
       try {
-        await userBO.create({ password: 'test' });
+        await userBO.verifyUser({ password: 'test' });
         expect(0).to.equal(1);
       } catch (error) {
         expect(error.statusCode).to.be.equals(422);
