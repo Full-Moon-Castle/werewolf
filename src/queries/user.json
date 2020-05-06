@@ -1,5 +1,6 @@
 {
     "insert": "insert into user(nickname, email, password, is_enabled, created_date) values (?, ?, ?, ?, ?)",
     "select": "select id, avatar, email, is_enabled, created_date as createdDate from user where 1=1",
-    "delete": "update user set is_enabled = 0, deleted_date = now() where id = ?"
+    "delete": "update user set is_enabled = 0, deleted_date = now() where id = ?",
+    "update": "update user set avatar = ?, updated_date = now() where id = ?"
 }

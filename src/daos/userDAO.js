@@ -53,6 +53,23 @@ class UserDAO {
     return result;
   }
 
+  async update(id, avatar) {
+    try {
+      logger.info('Starting update user in DAO');
+
+      const query = this.queries.update;
+
+      const params = [avatar, id];
+
+      const result = await this.dbHelper.execute(query, params);
+
+      return result;
+    } catch (error) {
+      logger.error(`An error occurred in DAO: ${error}`);
+      throw error;
+    }
+  }
+
   async delete(id) {
     try {
       logger.info('Starting delete user in DAO');

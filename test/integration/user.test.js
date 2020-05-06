@@ -115,6 +115,118 @@ describe('users', () => {
       });
     });
   });
+  describe('v1/users/:id', () => {
+    describe('UPDATE', () => {
+      it('Should return user with valid entity', () => {
+        return request(server)
+            .post('/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({
+              email: 'update@email.com',
+              nickname: 'update test',
+              password: '1234',
+            });
+      });
+      it('Logging in to get token', () => {
+        return request(server)
+            .post('/v1/login')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .send({ 'email': 'update@email.com', 'password': '1234' })
+            .then((response) => {
+              const { token, id } = response.body;
+              validToken = token;
+              userId = id;
+            });
+      });
+      it('Should return error when body is null', () => {
+        return request(server)
+            .put(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/)
+            .send()
+            .expect(422)
+            .then((response) => {
+              const { message } = response.body;
+              expect(message).to.be.equal('Avatar cannot be empty or null');
+            });
+      });
+      it('Should return error when body is empty', () => {
+        return request(server)
+            .put(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/)
+            .send({})
+            .expect(422)
+            .then((response) => {
+              const { message } = response.body;
+              expect(message).to.be.equal('Avatar cannot be empty or null');
+            });
+      });
+      it('Should return error when avatar is null', () => {
+        return request(server)
+            .put(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/)
+            .send({ avatar: null })
+            .expect(422)
+            .then((response) => {
+              const { message } = response.body;
+              expect(message).to.be.equal('Avatar cannot be empty or null');
+            });
+      });
+      it('Should return error when avatar is empty', () => {
+        return request(server)
+            .put(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/)
+            .send({ avatar: '' })
+            .expect(422)
+            .then((response) => {
+              const { message } = response.body;
+              expect(message).to.be.equal('Avatar cannot be empty or null');
+            });
+      });
+      it('Should return error when avatar is not a string', () => {
+        return request(server)
+            .put(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/)
+            .send({ avatar: 20 })
+            .expect(422)
+            .then((response) => {
+              const { message } = response.body;
+              expect(message).to.be.equal('Avatar must be a String');
+            });
+      });
+      it('Should return success when updated user\'s avatar', () => {
+        return request(server)
+            .put(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/)
+            .send({ avatar: 'test' })
+            .expect(200)
+            .then((response) => {
+              const { message } = response.body;
+              expect(message).contains(`Updated user id: ${userId}`);
+            });
+      });
+      it('Should return success when deleting user', () => {
+        return request(server)
+            .delete(`/v1/users/${userId}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect('Content-Type', /json/);
+      });
+    });
+  });
   describe('DELETE', () => {
     it('Should return user with valid entity', () => {
       return request(server)
